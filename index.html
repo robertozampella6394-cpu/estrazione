@@ -81,4 +81,43 @@ function saltaTurno() {
     indiceCorrente = Math.floor(Math.random() * nomi.length);
   }
   
-  aggiorna
+  aggiornaUI(new Date().toLocaleString('it-IT'), true);
+}
+
+function aggiornaUI(dataOra, isSalto) {
+  const container = document.getElementById('risultatoContainer');
+  const dettagli = document.getElementById('dettagliCalcolo');
+  const nomeDM = document.getElementById('nomeDM');
+  const btnSalta = document.getElementById('btnSalta');
+  const btnEstrai = document.getElementById('btnEstrai');
+
+  container.classList.remove('hidden');
+  
+  btnEstrai.textContent = "Nuova Estrazione";
+  btnEstrai.classList.replace('bg-emerald-600', 'bg-slate-600');
+  btnEstrai.classList.replace('hover:bg-emerald-500', 'hover:bg-slate-500');
+  btnEstrai.classList.replace('shadow-emerald-900/50', 'shadow-slate-900/50');
+  btnSalta.classList.remove('hidden');
+
+  container.classList.remove('fade-in');
+  void container.offsetWidth; 
+  container.classList.add('fade-in');
+
+  if (isSalto) {
+    dettagli.innerHTML = `<p class="text-amber-400 font-semibold">Turno saltato.</p>
+                          <p>È stato sorteggiato a caso un nuovo candidato.</p>`;
+    nomeDM.classList.replace('text-emerald-400', 'text-amber-400');
+  } else {
+    dettagli.innerHTML = `
+      <p><span class="font-semibold text-slate-300">Data/Ora estrazione:</span> ${dataOra}</p>
+      <p><span class="font-semibold text-emerald-400">Probabilità:</span> Esattamente 1 su ${nomi.length} (${(100 / nomi.length).toFixed(1)}%) per tutti</p>
+    `;
+    nomeDM.classList.replace('text-amber-400', 'text-emerald-400');
+  }
+
+  nomeDM.textContent = nomi[indiceCorrente];
+}
+</script>
+
+</body>
+</html>
