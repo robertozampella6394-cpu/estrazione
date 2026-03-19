@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -25,7 +24,7 @@
   <div class="max-w-md w-full bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-700">
     <div class="p-6 text-center">
       <h1 class="text-3xl font-bold mb-2 text-emerald-400">Dungeon Master</h1>
-      <p class="text-slate-400 mb-8">Sistema di estrazione algoritmica</p>
+      <p class="text-slate-400 mb-8">Estrazione Casuale Pura</p>
 
       <button id="btnEstrai" onclick="estraiDM()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-900/50 mb-4 active:scale-95">
         Estrai Ora
@@ -58,6 +57,7 @@ const nomi = [
   "Mauro Cancian",
   "Mauro Chiericoni",
   "Roberta",
+  "Roberto",
   "Roberto Dolci",
   "Roswit"
 ];
@@ -67,83 +67,18 @@ let indiceCorrente = -1;
 function estraiDM() {
   const ora = new Date();
   
-  const giorno = String(ora.getDate()).padStart(2, '0');
-  const mese = String(ora.getMonth() + 1).padStart(2, '0'); 
-  const anno = ora.getFullYear();
-  const ore = String(ora.getHours()).padStart(2, '0');
-  const minuti = String(ora.getMinutes()).padStart(2, '0');
-  
-  const stringaDataOra = `${giorno}${mese}${anno}${ore}${minuti}`;
-  
-  let somma = 0;
-  for (let char of stringaDataOra) {
-    somma += parseInt(char);
-  }
-  
-  let indiceLettera = somma % 26;
-  if (indiceLettera === 0) indiceLettera = 26; 
-  
-  const lettera = String.fromCharCode(64 + indiceLettera);
-  
-  indiceCorrente = -1;
-  for (let i = 0; i < nomi.length; i++) {
-    if (nomi[i].charAt(0).toUpperCase() >= lettera) {
-      indiceCorrente = i;
-      break;
-    }
-  }
-  
-  if (indiceCorrente === -1) {
-    indiceCorrente = 0;
-  }
+  indiceCorrente = Math.floor(Math.random() * nomi.length);
 
-  aggiornaUI(ora.toLocaleString('it-IT'), stringaDataOra, somma, lettera, false);
+  aggiornaUI(ora.toLocaleString('it-IT'), false);
 }
 
 function saltaTurno() {
   if (indiceCorrente === -1) return;
   
-  indiceCorrente = (indiceCorrente + 1) % nomi.length;
+  let vecchioIndice = indiceCorrente;
   
-  aggiornaUI(null, null, null, null, true);
-}
-
-function aggiornaUI(dataOra, stringa, somma, lettera, isSalto) {
-  const container = document.getElementById('risultatoContainer');
-  const dettagli = document.getElementById('dettagliCalcolo');
-  const nomeDM = document.getElementById('nomeDM');
-  const btnSalta = document.getElementById('btnSalta');
-  const btnEstrai = document.getElementById('btnEstrai');
-
-  container.classList.remove('hidden');
-  
-  btnEstrai.textContent = "Ricalcola da zero";
-  btnEstrai.classList.replace('bg-emerald-600', 'bg-slate-600');
-  btnEstrai.classList.replace('hover:bg-emerald-500', 'hover:bg-slate-500');
-  btnEstrai.classList.replace('shadow-emerald-900/50', 'shadow-slate-900/50');
-  btnSalta.classList.remove('hidden');
-
-  container.classList.remove('fade-in');
-  void container.offsetWidth; 
-  container.classList.add('fade-in');
-
-  if (isSalto) {
-    dettagli.innerHTML = `<p class="text-amber-400 font-semibold">Salto effettuato.</p>
-                          <p>Assegnazione passata al candidato successivo nell'elenco alfabetico.</p>`;
-    nomeDM.classList.replace('text-emerald-400', 'text-amber-400');
-  } else {
-    dettagli.innerHTML = `
-      <p><span class="font-semibold text-slate-300">Data/Ora:</span> ${dataOra}</p>
-      <p><span class="font-semibold text-slate-300">Stringa (ggmmaaaaohmm):</span> ${stringa}</p>
-      <p><span class="font-semibold text-slate-300">Somma cifre:</span> ${somma}</p>
-      <p><span class="font-semibold text-slate-300">Lettera target:</span> <strong class="text-emerald-400 text-lg">${lettera}</strong></p>
-    `;
-    nomeDM.classList.replace('text-amber-400', 'text-emerald-400');
+  while (indiceCorrente === vecchioIndice) {
+    indiceCorrente = Math.floor(Math.random() * nomi.length);
   }
-
-  nomeDM.textContent = nomi[indiceCorrente];
-}
-</script>
-
-</body>
-</html>
+  
+  aggiorna
