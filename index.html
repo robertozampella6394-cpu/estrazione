@@ -1,1 +1,149 @@
 
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrazione Dungeon Master</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="max-w-md w-full bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-700">
+    <div class="p-6 text-center">
+      <h1 class="text-3xl font-bold mb-2 text-emerald-400">Dungeon Master</h1>
+      <p class="text-slate-400 mb-8">Sistema di estrazione algoritmica</p>
+
+      <button id="btnEstrai" onclick="estraiDM()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-900/50 mb-4 active:scale-95">
+        Estrai Ora
+      </button>
+
+      <button id="btnSalta" onclick="saltaTurno()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-amber-900/50 hidden active:scale-95">
+        Salta Turno (Indisponibile)
+      </button>
+    </div>
+
+    <div id="risultatoContainer" class="hidden border-t border-slate-700 bg-slate-900 p-6 fade-in">
+      <div class="text-sm text-slate-400 mb-4 space-y-1" id="dettagliCalcolo">
+      </div>
+      
+      <div class="text-center mt-6">
+        <span class="text-sm uppercase tracking-wider text-slate-500 font-semibold">Il Dungeon Master è</span>
+        <div id="nomeDM" class="text-4xl font-extrabold text-emerald-400 mt-2 break-words">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const nomi = [
+  "Enrico, Toltechi",
+  "FM",
+  "Gianluca",
+  "Giuliano Tondelli",
+  "Leonardo",
+  "Mauro Cancian",
+  "Mauro Chiericoni",
+  "Roberta",
+  "Roberto Dolci",
+  "Roswit"
+];
+
+let indiceCorrente = -1;
+
+function estraiDM() {
+  const ora = new Date();
+  
+  const giorno = String(ora.getDate()).padStart(2, '0');
+  const mese = String(ora.getMonth() + 1).padStart(2, '0'); 
+  const anno = ora.getFullYear();
+  const ore = String(ora.getHours()).padStart(2, '0');
+  const minuti = String(ora.getMinutes()).padStart(2, '0');
+  
+  const stringaDataOra = `${giorno}${mese}${anno}${ore}${minuti}`;
+  
+  let somma = 0;
+  for (let char of stringaDataOra) {
+    somma += parseInt(char);
+  }
+  
+  let indiceLettera = somma % 26;
+  if (indiceLettera === 0) indiceLettera = 26; 
+  
+  const lettera = String.fromCharCode(64 + indiceLettera);
+  
+  indiceCorrente = -1;
+  for (let i = 0; i < nomi.length; i++) {
+    if (nomi[i].charAt(0).toUpperCase() >= lettera) {
+      indiceCorrente = i;
+      break;
+    }
+  }
+  
+  if (indiceCorrente === -1) {
+    indiceCorrente = 0;
+  }
+
+  aggiornaUI(ora.toLocaleString('it-IT'), stringaDataOra, somma, lettera, false);
+}
+
+function saltaTurno() {
+  if (indiceCorrente === -1) return;
+  
+  indiceCorrente = (indiceCorrente + 1) % nomi.length;
+  
+  aggiornaUI(null, null, null, null, true);
+}
+
+function aggiornaUI(dataOra, stringa, somma, lettera, isSalto) {
+  const container = document.getElementById('risultatoContainer');
+  const dettagli = document.getElementById('dettagliCalcolo');
+  const nomeDM = document.getElementById('nomeDM');
+  const btnSalta = document.getElementById('btnSalta');
+  const btnEstrai = document.getElementById('btnEstrai');
+
+  container.classList.remove('hidden');
+  
+  btnEstrai.textContent = "Ricalcola da zero";
+  btnEstrai.classList.replace('bg-emerald-600', 'bg-slate-600');
+  btnEstrai.classList.replace('hover:bg-emerald-500', 'hover:bg-slate-500');
+  btnEstrai.classList.replace('shadow-emerald-900/50', 'shadow-slate-900/50');
+  btnSalta.classList.remove('hidden');
+
+  container.classList.remove('fade-in');
+  void container.offsetWidth; 
+  container.classList.add('fade-in');
+
+  if (isSalto) {
+    dettagli.innerHTML = `<p class="text-amber-400 font-semibold">Salto effettuato.</p>
+                          <p>Assegnazione passata al candidato successivo nell'elenco alfabetico.</p>`;
+    nomeDM.classList.replace('text-emerald-400', 'text-amber-400');
+  } else {
+    dettagli.innerHTML = `
+      <p><span class="font-semibold text-slate-300">Data/Ora:</span> ${dataOra}</p>
+      <p><span class="font-semibold text-slate-300">Stringa (ggmmaaaaohmm):</span> ${stringa}</p>
+      <p><span class="font-semibold text-slate-300">Somma cifre:</span> ${somma}</p>
+      <p><span class="font-semibold text-slate-300">Lettera target:</span> <strong class="text-emerald-400 text-lg">${lettera}</strong></p>
+    `;
+    nomeDM.classList.replace('text-amber-400', 'text-emerald-400');
+  }
+
+  nomeDM.textContent = nomi[indiceCorrente];
+}
+</script>
+
+</body>
+</html>
