@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estrazione Dungeon Master</title>
+<title>Estrazione Custode dell'Intento</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
-    background-color: #09090b; /* Zinc 950 - quasi nero */
+    background-color: #09090b; 
     color: #e4e4e7;
-    font-family: 'Cinzel', serif; /* Font in stile fantasy/epico */
-    background-image: radial-gradient(circle at center, #1e1b4b 0%, #09090b 100%); /* Alone viola scuro di fondo */
+    font-family: 'Cinzel', serif; 
+    background-image: radial-gradient(circle at center, #1e1b4b 0%, #09090b 100%); 
   }
   .fade-in {
     animation: fadeIn 1s ease-in-out;
@@ -20,7 +20,6 @@
     from { opacity: 0; transform: scale(0.95) translateY(-10px); text-shadow: 0 0 0px rgba(168, 85, 247, 0); }
     to { opacity: 1; transform: scale(1) translateY(0); text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
   }
-  /* Stile per i bordi "magici" */
   .mystic-border {
     box-shadow: 0 0 15px rgba(88, 28, 135, 0.4);
     border: 1px solid #4c1d95;
@@ -33,15 +32,15 @@
     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-600 to-transparent"></div>
 
     <div class="p-8 text-center">
-      <h1 class="text-4xl font-bold mb-2 text-purple-400 tracking-wider uppercase">Il Maestro<br>del Dungeon</h1>
-      <p class="text-zinc-500 mb-8 italic">Il Fato ha decretato...</p>
+      <h1 class="text-4xl font-bold mb-2 text-purple-400 tracking-wider uppercase">Custode<br>dell'Intento</h1>
+      <p class="text-zinc-500 mb-8 italic">Sincronicità e Attenzione</p>
 
       <button id="btnEstrai" onclick="estraiDM()" class="w-full bg-purple-900 hover:bg-purple-800 text-purple-100 border border-purple-700 font-bold py-4 px-6 rounded-md transition-all duration-300 shadow-[0_0_15px_rgba(88,28,135,0.6)] hover:shadow-[0_0_25px_rgba(147,51,234,0.8)] mb-4 active:scale-95 uppercase tracking-widest">
-        Evoca il Nome
+        Lascia agire lo Spirito
       </button>
 
       <button id="btnSalta" onclick="saltaTurno()" class="w-full bg-red-950 hover:bg-red-900 text-red-200 border border-red-800 font-bold py-3 px-6 rounded-md transition-all duration-300 shadow-[0_0_10px_rgba(127,29,29,0.5)] hidden active:scale-95 uppercase text-sm tracking-wider">
-        Esilia (Indisponibile)
+        Cedi il Passo (Indisponibile)
       </button>
     </div>
 
@@ -50,7 +49,7 @@
       </div>
       
       <div class="text-center mt-4">
-        <span class="text-sm uppercase tracking-[0.3em] text-purple-500/70 font-bold">Il prescelto è</span>
+        <span class="text-sm uppercase tracking-[0.3em] text-purple-500/70 font-bold">La Guida è</span>
         <div id="nomeDM" class="text-5xl font-extrabold text-purple-300 mt-4 break-words drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]">
         </div>
       </div>
@@ -103,7 +102,7 @@ function aggiornaUI(dataOra, isSalto) {
 
   container.classList.remove('hidden');
   
-  btnEstrai.textContent = "Nuova Evocazione";
+  btnEstrai.textContent = "Nuova Estrazione";
   btnEstrai.classList.replace('bg-purple-900', 'bg-zinc-800');
   btnEstrai.classList.replace('hover:bg-purple-800', 'hover:bg-zinc-700');
   btnEstrai.classList.replace('border-purple-700', 'border-zinc-700');
@@ -117,14 +116,14 @@ function aggiornaUI(dataOra, isSalto) {
   container.classList.add('fade-in');
 
   if (isSalto) {
-    dettagli.innerHTML = `<p class="text-red-400 font-bold">Il precedente Master è stato esiliato.</p>
-                          <p>Le trame del destino hanno scelto una nuova guida.</p>`;
+    dettagli.innerHTML = `<p class="text-red-400 font-bold">Il Custode precedente ha ceduto l'energia.</p>
+                          <p>Le trame dell'Intento hanno scelto una nuova guida.</p>`;
     nomeDM.classList.replace('text-purple-300', 'text-red-400');
     nomeDM.classList.replace('drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]', 'drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]');
   } else {
     dettagli.innerHTML = `
       <p><span class="text-zinc-600">Sigillo temporale:</span> ${dataOra}</p>
-      <p><span class="text-purple-500">Probabilità del fato:</span> 1 su ${nomi.length} (${(100 / nomi.length).toFixed(1)}%)</p>
+      <p><span class="text-purple-500">Sincronicità:</span> 1 su ${nomi.length} (${(100 / nomi.length).toFixed(1)}%)</p>
     `;
     nomeDM.classList.replace('text-red-400', 'text-purple-300');
     nomeDM.classList.replace('drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]', 'drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]');
